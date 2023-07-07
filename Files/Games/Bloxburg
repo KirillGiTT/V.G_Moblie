@@ -1,4 +1,5 @@
-
+local Table = {185655149, 4491408735}
+if not table.find(Table, game.PlaceId) then return end
 local ST = ReplicatedStorage.Stats[Player.Name]
 local Locations = Workspace.Environment.Locations
 local DA = ReplicatedStorage.Modules.DataService
@@ -94,9 +95,9 @@ UserInputService.WindowFocused:Connect(function()
 end)
 local Lib = loadstring(game:HttpGet("https://raw.githubusercontent.com/1201for/V.G_Moblie/main/Files/Gui",true))()
 --Lib:CreateWindow(name,DefTab,WinSize,function)
-local Win = Lib:CreateWindow("V.G Hub",1,nil,nil)
-local Tab = Win:CreateTab("Tab ",function() warn(i) end)
-local Tab2 = Win:CreateTab("Tab 2",function() warn(i) end)
+local Win = Lib:CreateWindow("V.G Hub",2,nil, nil)
+local Tab = Win:CreateTab("V.G Hub",function() end)
+local FUCK = Win:CreateTab("FUCK",function() end)
 Tab:CreateToggle("HairDesser",false,function(t)
 T = t
     spawn(function()
@@ -398,7 +399,7 @@ Tab:CreateToggle("LowRender Fps",false,function(t)
     Render = t
 end)
 
-Tab2:CreateButton("FPS Booster",function()
+FUCK:CreateButton("FPS Booster",function()
     for i,v in pairs(game:GetDescendants()) do 
         if v:IsA("Texture") then
             v.Texture = ""
@@ -407,10 +408,10 @@ Tab2:CreateButton("FPS Booster",function()
         end 
     end 
 end)
-Tab2:CreateButton("ServerHop",function()
+FUCK:CreateButton("ServerHop",function()
     ServerHop()
 end)
-Tab2:CreateButton("Rejoin",function()
+FUCK:CreateButton("Rejoin",function()
     local Success, ErrorMessage = pcall(function()
         Rejoin()
     end)
