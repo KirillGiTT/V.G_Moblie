@@ -1,0 +1,422 @@
+
+local ST = ReplicatedStorage.Stats[Player.Name]
+local Locations = Workspace.Environment.Locations
+local DA = ReplicatedStorage.Modules.DataService
+local j = Player.PlayerScripts.Modules.JobHandler
+local Hairs = {--Created by Zinzox
+    Afro = 11412443,
+    Charming = 74878559,
+    Combed = 13332444,
+    Headband = 13070796,
+    Pigtails = 82186393,
+    Messy = 26400959,
+    Bun = 47963332,
+    Long = 19999424,
+    Curly = 31309506,
+    Sideswept = 16627529
+}
+
+local Color = { --Created by Zinzox Apparently 
+    Gray = BrickColor.new("Pearl"),
+    Blonde = BrickColor.new("Gold"),
+    Brown = BrickColor.new("Burnt Sienna"),
+    Black = BrickColor.new("Black"),
+    Red = BrickColor.new("Crimson"),
+    Blue = BrickColor.new("Bright blue"),
+    Green = BrickColor.new("Lime green"),
+    Pink = BrickColor.new("Hot pink")
+}
+
+local Keys = {
+    ["A"] = "0x41",
+    ["D"] = "0x44",
+    ["E"] = "0x45", 
+    ["F"] = "0x46",
+    ["S"] = "0x53",
+    ["R"] = "0x52",
+    ["W"] = "0x57",
+    ["Q"] = "0x51"
+}
+local LookAt = function(A)
+    Workspace.CurrentCamera.CFrame =  CFrame.lookAt(Workspace.CurrentCamera.CFrame.Position + Vector3.new(0,5,0), A:GetModelCFrame().Position)
+end
+local LookAt2 = function(A)
+    Workspace.CurrentCamera.CFrame =  CFrame.lookAt(Workspace.CurrentCamera.CFrame.Position + Vector3.new(0,5,0), A.Position)
+end
+local WalkTo = function(A)
+    Player.Character:FindFirstChildWhichIsA("Humanoid", true):MoveTo(A)
+    Player.Character:FindFirstChildWhichIsA("Humanoid", true).MoveToFinished:Wait()
+end
+local StylishOrder = function(v)
+    return {Style = v.Order:FindFirstChild("Style").Value, Color = v.Order:FindFirstChild("Color").Value}
+end
+
+local BurgerOrder = function(v)
+    return {Burger = v.Order.Burger.Value, Fries = v.Order.Fries.Value,Cola = v.Order.Cola.Value}
+end
+local OrderIceCream = function(v)
+    return {Flavor1 = v.Order.Flavor1.Value, Flavor2 = v.Order.Flavor2.Value, Topping = v.Order.Topping.Value}
+end
+local function Tween(Part, Position)
+    local Speed = 35
+    Part.PrimaryPart:FindFirstChildWhichIsA("BodyVelocity", true):Destroy()
+    local A = CFrame.new(Position.X, Position.Y, Position.Z)
+    local B = Instance.new('BodyVelocity', Part.PrimaryPart)
+    B.MaxForce = Vector3.new(9e9, 9e9, 9e9)
+    B.P = Speed
+    repeat
+        local to = (A.p - Part.PrimaryPart.Position).Unit * Speed
+        B.Velocity = to
+        wait()
+    until (Part.PrimaryPart.Position - A.Position).Magnitude <= 5
+    B.Velocity = Vector3.new(0, 0, 0)
+end
+spawn(function()
+    while wait() do
+        if Player.PlayerGui.MainGUI.Bar.CharMenu.WorkFrame.WorkFrame.TimeLabel.TextLabel.Text:find("5h") then
+            game:Shutdown()
+        end
+    end
+end)
+DisableConnection(Player.Idled)
+DisableConnection(ScriptContext.Error)
+UserInputService.WindowFocusReleased:Connect(function()
+    if Render then
+        RunService:Set3dRenderingEnabled(false)
+        setfpscap(15)
+    end
+end)
+UserInputService.WindowFocused:Connect(function()
+    if Render then
+        RunService:Set3dRenderingEnabled(true)
+        setfpscap(100)
+    end
+end)
+local Lib = loadstring(game:HttpGet("https://raw.githubusercontent.com/1201for/V.G_Moblie/main/Files/Gui",true))()
+--Lib:CreateWindow(name,DefTab,WinSize,function)
+local Win = Lib:CreateWindow("V.G Hub",1,nil,nil)
+local Tab = Win:CreateTab("Tab ",function() warn(i) end)
+local Tab2 = Win:CreateTab("Tab 2",function() warn(i) end)
+Tab:CreateToggle("HairDesser",false,function(t)
+T = t
+    spawn(function()
+        while wait() and T do
+            pcall(function()
+                if ST.Job.Value ~= "StylezHairdresser" then return require(j):GoToWork("StylezHairdresser") end
+                local w = Locations.StylezHairStudio.HairdresserWorkstations:GetChildren()[2]
+                Player.Character:FindFirstChildWhichIsA("Humanoid", true):MoveTo(w:GetModelCFrame().Position)
+                local A = w.Occupied.Value
+                local Order = StylishOrder(A)
+                if A.PrimaryHat.Handle.Mesh.MeshId:split("id=")[2] ~= tostring(Hairs[Order.Style]) or A.PrimaryHat.Handle.BrickColor ~= Color[Order.Color] then
+                    repeat wait(0.5)
+                        FireConnection(w.Mirror.HairdresserGUI.Frame:FindFirstChild("Style").Next.Activated)
+                    until A.PrimaryHat.Handle.Mesh.MeshId:split("id=")[2] == tostring(Hairs[Order.Style])
+                    repeat wait(0.5)
+                        FireConnection(w.Mirror.HairdresserGUI.Frame:FindFirstChild("Color").Next.Activated)
+                    until A.PrimaryHat.Handle.BrickColor == Color[Order.Color]
+                    wait(0.5)
+                    FireConnection(w.Mirror.HairdresserGUI.Frame:FindFirstChild("Done").Activated)
+                end
+                if ST.Job.ShiftEarnings.Value >= Number and Dis then
+                    Kick(Player, "Kicked At $" .. Number .. " Your Welcome")
+                    game:Shutdown()
+                end
+                if ST.Job.ShiftEarnings.Value >= Number and Shop then
+                    Kick(Player, "Serverhopping At $" .. Number .. " Your Welcome")
+                    ServerHop()
+                end
+            end)
+        end
+    end)
+end)
+
+Tab:CreateToggle("BloxyBurger",false,function(t)
+H = t
+    spawn(function()
+        while wait() and H do
+            pcall(function()
+                if ST.Job.Value ~= "BloxyBurgersCashier" then return require(j):GoToWork("BloxyBurgersCashier") end
+                local w = Locations.BloxyBurgers.CashierWorkstations:GetChildren()[1]
+                Player.Character:FindFirstChildWhichIsA("Humanoid", true):MoveTo(w.OrderDisplay.DisplayMain.Position)
+                local A = w.Occupied.Value
+                local Order = BurgerOrder(A)
+                repeat wait() until A:FindFirstChild("ChatBubble", true)
+                if A:FindFirstChild("ChatBubble", true) then
+                    if Order.Fries == true and wait(0.5) then
+                        FireConnection(w.OrderDisplay.DisplayMain.CashierGUI.Frame.Fries.Activated)
+                    end
+                    if Order.Cola == true and wait(0.5) then
+                        FireConnection(w.OrderDisplay.DisplayMain.CashierGUI.Frame.Cola.Activated)
+                    end
+                    wait(0.5)
+                    FireConnection(w.OrderDisplay.DisplayMain.CashierGUI.Frame[Order.Burger].Activated)
+                    wait(1)
+                    FireConnection(w.OrderDisplay.DisplayMain.CashierGUI.Frame.Done.Activated)
+                    wait(5)
+                end
+                if ST.Job.ShiftEarnings.Value >= Number and Dis then
+                    Kick(Player, "Kicked At $" .. Number .. " Your Welcome")
+                    game:Shutdown()
+                end
+                if ST.Job.ShiftEarnings.Value >= Number and Shop then
+                    Kick(Player, "ServerHopping At $" .. Number .. " Your Welcome")
+                    ServerHop()
+                end
+            end)
+        end
+    end)
+end)
+
+Tab:CreateToggle("MikesMechanic",false,function(t)
+TD = t
+    spawn(function()
+        while wait(5) and TD do
+            pcall(function()
+                if ST.Job.Value ~= "MikesMechanic" then return require(j):GoToWork("MikesMechanic") end
+                for i,v in next, Workspace.Environment.Locations.MikesMotors.MechanicWorkstations:GetChildren() do
+                    if v.Display.Screen.MechanicGUI.Frame.Done.Visible and not v.Display.Screen.MechanicGUI.Used.Visible then
+                        w = v
+                    end
+                end
+                for i,v in next, Workspace.Environment.Locations.MikesMotors.MechanicWorkstations:GetDescendants() do
+                    if v.Parent.Name == "DrawerSmall" or v.Parent.Name == "Display" and v:IsA("BasePart") and v.CanCollide then
+                        v.CanCollide = false
+                    end
+                end
+            
+                WalkTo(Vector3.new(1162, 14, 401))
+                local A = w.Occupied.Value
+                local Order = A:FindFirstChild("Order", true)
+                repeat wait() until A:FindFirstChild("ChatBubble", true)
+                local Wanted
+                if Order:FindFirstChild('Color') then
+                    Wanted = 'Color'
+                elseif Order:FindFirstChild('Wheels') then
+                    Wanted = 'Wheels'
+                elseif Order:FindFirstChild('Oil') then
+                    Wanted = 'Oil'
+                end
+                if Wanted == "Oil" then
+                    local OilCan = workspace.Environment.Locations.MikesMotors.OilCans:FindFirstChild('Can', true)
+                    repeat wait()
+                        WalkTo(OilCan:GetModelCFrame().Position)
+                        LookAt(OilCan)
+                        wait(3)
+                        FireConnection(Player.PlayerGui.MainGUI.InteractIndicator.Activated)
+                    until Player.Character:FindFirstChild("Oil Can", true)
+                    WalkTo(Vector3.new(1162, 14, 401))
+                    FireConnection(Player.PlayerGui.MainGUI.InteractIndicator.Activated)
+                end
+                if Wanted == "Color" then
+                    local Color = Order.Color.Value
+                    local Paint = workspace.Environment.Locations.MikesMotors.PaintingEquipment:FindFirstChild(Color)
+                    
+                        WalkTo(Paint.Can.Position)
+                    repeat wait()
+                        LookAt(Paint)
+                        wait(3)
+                        FireConnection(Player.PlayerGui.MainGUI.InteractIndicator.Activated)
+                    until Player.Character:FindFirstChild("Spray Painter", true) and Player.Character:FindFirstChild("Spray Painter", true).Can.BrickColor == Paint.Can.BrickColor
+                    WalkTo(Vector3.new(1162, 14, 401))
+                    LookAt(A.Vehicle)
+                    FireConnection(Player.PlayerGui.MainGUI.InteractIndicator.Activated)
+                    wait(5)
+                end
+                if Wanted == "Wheels" then
+                    for i=1,2 do
+                        local Wheels = Order.Wheels.Value
+                        local Wheel = Workspace.Environment.Locations.MikesMotors.TireRacks:FindFirstChild(Wheels)
+                        while not Player.Character:FindFirstChild("Motorcycle Wheel", true) do
+                            WalkTo(Wheel.Part.Position)
+                            LookAt(Wheel)
+                            wait(3)
+                            FireConnection(Player.PlayerGui.MainGUI.InteractIndicator.Activated)
+                        end
+                        while Player.Character:FindFirstChild("Motorcycle Wheel", true) do
+                            LookAt(A.Vehicle)
+                            WalkTo(Vector3.new(1162, 14, 401))
+                            FireConnection(Player.PlayerGui.MainGUI.InteractIndicator.Activated)
+                            if Player.PlayerGui.MainGUI.InteractionMenu:FindFirstChild("Center", true) then
+                                FireConnection(Player.PlayerGui.MainGUI.InteractionMenu:FindFirstChild("Center", true):FindFirstChild("Button", true).Activated)
+                            end
+                        end
+                    end
+                end
+                FireConnection(w.Display.Screen.MechanicGUI.Frame.Done.Activated)
+                if ST.Job.ShiftEarnings.Value >= Number and Dis then
+                    Kick(Player, "Kicked At $" .. Number .. " Your Welcome")
+                    game:Shutdown()
+                end
+                if ST.Job.ShiftEarnings.Value >= Number and Shop then
+                    Kick(Player, "ServerHopping At $" .. Number .. " Your Welcome")
+                    ServerHop()
+                end
+            end)
+        end
+    end)
+end)
+
+Tab:CreateToggle("BensIceCreamSeller",false,function(t)
+Go = t
+    spawn(function()
+        while wait() and Go do
+            pcall(function()
+                if ST.Job.Value ~= "BensIceCreamSeller" then return require(j):GoToWork("BensIceCreamSeller") end
+                for i,v in next, workspace.Environment.Locations.BensIceCream:GetDescendants() do
+                    if v:IsA("BasePart") and v.CanCollide then
+                        v.CanCollide = false
+                    end
+                end
+                local W
+                for i,v in next, workspace.Environment.Locations.BensIceCream.CustomerTargets:GetChildren() do
+                    if v.Occupied.Value ~= nil then
+                        W = v.Occupied.Value
+                    end
+                end
+                repeat wait() until W:FindFirstChild("ChatBubble", true)
+                local Table = workspace.Environment.Locations.BensIceCream.TableObjects
+                local Order = OrderIceCream(W)
+                if not Player.Character:FindFirstChild("Ice Cream Cup", true) then
+                    WalkTo(Table.IceCreamCups:GetModelCFrame().Position)
+                    LookAt(Table.IceCreamCups)
+                    FireConnection(Player.PlayerGui.MainGUI.InteractIndicator.Activated)
+                end
+                if Order.Flavor1 then
+                    WalkTo(Table:FindFirstChild(Order.Flavor1):GetModelCFrame().Position + Vector3.new(1,0,2))
+                    LookAt(Table:FindFirstChild(Order.Flavor1))
+                    wait(1)
+                    FireConnection(Player.PlayerGui.MainGUI.InteractIndicator.Activated)
+                end
+                if Order.Flavor2 ~= nil then
+                    WalkTo(Table:FindFirstChild(Order.Flavor2):GetModelCFrame().Position)
+                    LookAt(Table:FindFirstChild(Order.Flavor2))
+                    wait(1)
+                    FireConnection(Player.PlayerGui.MainGUI.InteractIndicator.Activated)
+                end
+                if Order.Topping ~= "" then
+                    WalkTo(Table:FindFirstChild(Order.Topping):GetModelCFrame().Position)
+                    LookAt(Table:FindFirstChild(Order.Topping))
+                    wait(1)
+                    FireConnection(Player.PlayerGui.MainGUI.InteractIndicator.Activated)
+                end
+                WalkTo(W:GetModelCFrame().Position)
+                LookAt(W)
+                wait(1)
+                FireConnection(Player.PlayerGui.MainGUI.InteractIndicator.Activated)
+                wait(10)
+                if ST.Job.ShiftEarnings.Value >= Number and Dis then
+                    Kick(Player, "Kicked At $" .. Number .. " Your Welcome")
+                    game:Shutdown()
+                end
+                if ST.Job.ShiftEarnings.Value >= Number and Shop then
+                    Kick(Player, "ServerHopping At $" .. Number .. " Your Welcome")
+                    ServerHop()
+                end
+            end)
+        end
+    end)
+end)
+Tab:CreateToggle("Cook Helper",false,function(t)
+GHT = t
+    spawn(function()
+        while wait() and GHT do
+            pcall(function()
+                if ST.Job.Value ~= "SupermarketCashier" then return require(j):GoToWork("SupermarketCashier") end
+                local W = Workspace.Environment.Locations.Supermarket.CashierWorkstations:GetChildren()[2]
+                WalkTo(W:GetModelCFrame().Position)
+                local N = 0
+                if W.BagsLeft.Value < 1 then
+                    local C = Workspace.Environment.Locations.Supermarket.Crates:FindFirstChild('BagCrate')
+                    WalkTo(C.Position)
+                    LookAt2(C)
+                    FireConnection(Player.PlayerGui.MainGUI.InteractIndicator.Activated)
+                    wait(1)
+                    WalkTo(W.BagHolder:GetModelCFrame().Position)
+                    LookAt(W)
+                    FireConnection(Player.PlayerGui.MainGUI.InteractIndicator.Activated)
+                end
+
+                if W.DroppedFood:FindFirstChildWhichIsA('Part', true) then
+                    WalkTo(W:GetModelCFrame().Position)
+                    LookAt(W)
+                    FireConnection(Player.PlayerGui.MainGUI.InteractIndicator.Activated)
+                    wait(1)
+                    LookAt2(W.DroppedFood:FindFirstChildWhichIsA('Part', true))
+                    FireConnection(Player.PlayerGui.MainGUI.InteractIndicator.Activated)
+
+                end
+                if not W.DroppedFood:FindFirstChildWhichIsA('Part', true) and wait(3) then
+                    FireConnection(W.Display.Screen.CashierGUI.Frame.Done.Activated)
+                end
+                if ST.Job.ShiftEarnings.Value >= Number and Dis then
+                    Kick(Player, "Kicked At $" .. Number .. " Your Welcome")
+                    game:Shutdown()
+                end
+                if ST.Job.ShiftEarnings.Value >= Number and Shop then
+                    Kick(Player, "ServerHopping At $" .. Number .. " Your Welcome")
+                    ServerHop()
+                end
+            end)
+        end
+    end)
+end)
+
+Tab:CreateToggle("Cook Helper",false,function(t)
+Yes = Toggles.FDd.Value
+    Player.PlayerGui.MainGUI.ChildAdded:Connect(function(v)
+        wait(0.3)
+        if Yes and v.Name == "DefaultButton" then
+            FireConnection(v.MouseButton1Click)    
+            if v:FindFirstChild("TextLabel") then
+                for Index,Value in next, Keys do
+                    if v:FindFirstChild("TextLabel").Text == Index then
+                        keypress(Value)
+                        keyrelease(Value)
+                    end
+                end
+            end     
+        end
+    end)
+end)
+
+Tab:CreateSlider("Stop At Certain Money",2500,5000000,2500,function(v)
+    Number = v 
+end)
+Tab:CreateSlider("Stop At Certain Money",2500,5000000,2500,function(v)
+    Number = v 
+end)
+
+Tab:CreateToggle("Kick At Certain Job Money",false,function(t)
+    Dis = t
+end)
+
+Tab:CreateToggle("ServerHop At Certain Job Money",false,function(t)
+    Shop = t
+end)
+
+Tab:CreateToggle("LowRender Fps",false,function(t)
+    Render = t
+end)
+
+Tab2:CreateButton("FPS Booster",function()
+    for i,v in pairs(game:GetDescendants()) do 
+        if v:IsA("Texture") then
+            v.Texture = ""
+        elseif v:IsA("BasePart") then
+            v.Material = Enum.Material.Wood
+        end 
+    end 
+end)
+Tab2:CreateButton("ServerHop",function()
+    ServerHop()
+end)
+Tab2:CreateButton("Rejoin",function()
+    local Success, ErrorMessage = pcall(function()
+        Rejoin()
+    end)
+    if ErrorMessage and not Success then
+        warn(ErrorMessage)
+    elseif Success and not ErrorMessage then
+        print(Success)
+    end
+end)
