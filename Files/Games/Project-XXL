@@ -1,0 +1,366 @@
+local VirtualUser = Instance.new("VirtualInputManager")
+Player.Idled:connect(
+    function()
+        VirtualUser:SendMouseButtonEvent(0, 0, 1, false, game, 0)
+    end
+)
+
+local Chests = workspace.Chests
+local DamageParts = workspace.DamageParts
+local Effect = workspace.Effects
+local Live = workspace.Live
+local Map = workspace.Map
+local NPCS = workspace.NPCS
+local QuestMarkers = workspace.QuestMarkers
+local Drops = workspace.Drops
+local QuestBoards = workspace.QuestBoards
+local PlayerValues = Player.PlayerValues
+
+RunService.Stepped:Connect(function()
+    sethiddenproperty(Player, "SimulationRadius", 1000)
+end)
+
+local Mobs = {}
+for i,v in next, Live:GetChildren() do
+    if v:IsA("Model") and not table.find(Mobs, v.Name) then
+        print(v)
+        table.insert(Mobs, v.Name)
+    end
+end
+local Quests = {}
+for i,v in next, Player.Quests:GetChildren() do
+    if not table.find(Quests, v.Name) then
+        table.insert(Quests, v.Name)
+    end
+end
+local Codes = {}
+for i,v in next, Player.Codes:GetChildren() do
+    if not table.find(Codes, v.Name) then
+        table.insert(Codes, v.Name)
+    end
+end
+local Fruits = {
+    Common = {
+        "Nagi Nagi no mi",
+        "Suke Suke no mi",
+        "Guru Guru no mi",
+        "Sube Sube no mi",
+        "Dark Magic (Simon)",
+        "Purple Flare",
+        "Airwalk",
+        "Blaze",
+    },
+    Rare = {
+        "Mera Mera no mi",
+        "Zushi Zushi no mi",
+        "Goro Goro no mi",
+        "Suna Suna no mi",
+        "Moku Moku no mi",
+        "Yami Yami no mi",
+        "Gomu Gomu no mi",
+        "Pika Pika no mi",
+        "Hie Hie no mi",
+        "Gura Gura no mi",
+        "Blueflame"
+    },
+    Legendary = {
+        "Anti Magic",
+        "Sunshine (Escanor)",
+        "Lightning Dragon Slayer Magic",
+        "Fire Dragon Slayer Magic",
+        "Fire Dragon Slayer Magic v2",
+        "One For All: Prime"
+    }
+}
+local Specializations = {
+    "Haoshoku Haki",
+    "Flashstep",
+    "Kenbunshoku Haki",
+    "Sonido",
+    "Busoshoku Haki"
+}
+local Races = {
+    "Human",
+    "Kumate Tribe",
+    "Skypiean",
+    "Dodoria's Race",
+    "Burter's Race",
+    "Namekian",
+    "Saiyan",
+    "Frieza Race (First Form)",
+    "Bojack's Race",
+    "Android",
+    "Uzumaki Clan",
+    "Cerealian",
+    "Hybrid Saiyan",
+    "Angel (In Training)",
+    "Demon",
+    "Fanalis",
+    "Lunarian",
+    "Mink",
+    "Angel",
+    "Baby (Possessed)",
+    "Heeter Race",
+    "Toppo's Race",
+    "Beerus' Race",
+}
+local removeCommon = function(A)
+    for i,v in next, Player.Backpack:GetChildren() do
+        if v:IsA("Tool") and table.find(Fruits.Common, v.Name) then
+            v.Parent = nil
+        end
+    end
+end
+local removeCommonBags = function()
+    for i,v in next, Player.Backpack:GetChildren() do
+        if v:IsA("Tool") and v:FindFirstChild("Rarity", true) and v:FindFirstChild("Rarity", true).Text == "Common" then
+            v.Parent = nil
+        end
+    end
+end
+local removeUnCommonBags = function()
+    for i,v in next, Player.Backpack:GetChildren() do
+        if v:IsA("Tool") and v:FindFirstChild("Rarity", true) and v:FindFirstChild("Rarity", true).Text == "Uncommon" then
+            v.Parent = nil
+        end
+    end
+end
+
+local Checkrace = function()
+    return Player.PlayerValues.Race.Value 
+end
+local RollRace = function(A)
+    if A ~= Player.PlayerValues.Race.Value  then
+        for i,v in next, Player.Backpack:GetChildren() do
+            if v:IsA("Tool") and v:FindFirstChild("Heart", true) then
+                Player.Character:FindFirstChildWhichIsA("Humanoid"):EquipTool(v)
+                ReplicatedStorage:WaitForChild("RemoteEvents"):FindFirstChild("ItemRemote"):FireServer()
+                break
+            elseif not v:IsA("Tool") and not v:FindFirstChild("Heart", true) then
+                ReplicatedStorage:WaitForChild("RemoteEvents"):FindFirstChild("RaceSpinRemote"):FireServer(1)
+                break
+            end
+        end
+    end
+end
+
+
+
+local Teleport = function(A)
+    Player.Character:FindFirstChild("HumanoidRootPart").CFrame = A 
+end
+local Hit = function(A)
+    ReplicatedStorage:WaitForChild("RemoteEvents"):WaitForChild("BladeCombatRemote"):FireServer(false, Vector3.new(A:FindFirstChildWhichIsA("BasePart").Position), CFrame.new(A:FindFirstChildWhichIsA("BasePart").Position))
+end
+local Equip = function()
+    if Player.Character:FindFirstChildWhichIsA("Tool", true) then
+        Player.Character.Humanoid:UnequipTools()
+    end
+    if not Player.Character:FindFirstChildWhichIsA("Tool", true) then
+        local v = Player.Backpack:FindFirstChild("Combat Script", true).Parent
+        Player.Character.Humanoid:EquipTool(v) 
+    end
+end
+
+local Lib = loadstring(game:HttpGet("https://raw.githubusercontent.com/1201for/V.G_Moblie/main/Files/Gui",true))()
+local Win = Lib:CreateWindow("V.G Hub",2,nil, nil)
+local Tab = Win:CreateTab("V.G Hub",function() warn(i) end)
+local Tab2 = Win:CreateTab("Tab 2",function() warn(i) end)
+Tab:CreateToggle("Auto Mob",false,function(t)
+H = t
+    RunService.Stepped:Connect(function()
+        pcall(function()
+            if H then
+                Player.Character:FindFirstChildWhichIsA("Humanoid"):ChangeState(11)
+            end
+        end)
+    end)
+    spawn(function()
+        while wait(.1) and H do 
+            pcall(function()
+                for i,v in next, Live:GetChildren() do
+                    if v:IsA("Model") and v.Name == ddd and v.Humanoid.Health ~= 0 then
+                        Teleport(CFrame.new(v:GetModelCFrame().Position + Vector3.new(0,-7,0)))
+                        Equip()
+                        Hit(v)
+                        if v.Humanoid.Health ~= v.Humanoid.MaxHealth then
+                            v.Humanoid.Health = 0
+                        end
+                    end
+                end
+            end)
+        end
+    end)
+end)
+
+Tab:CreateDropdown("Mobs", Mobs,false,function(c,f)
+    ddd = c
+end)
+Tab:CreateToggle("Auto Quest",false,function(t)
+Go = t
+    RunService.Stepped:Connect(function()
+        pcall(function()
+            if Go then
+                Player.Character:FindFirstChildWhichIsA("Humanoid"):ChangeState(11)
+            end
+        end)
+    end)
+    spawn(function()
+        while wait(.1) and Go do 
+            pcall(function()
+                local Quest = Player.PlayerGui.Menu.QuestFrame
+                if not Quest.Visible then
+                    Teleport(QuestBoards:FindFirstChild(Quest1, true).CFrame)
+                    wait(1)
+                    fireclickdetector(QuestBoards:FindFirstChild(Quest1, true).ClickDetector)
+                end
+                if Quest.Visible then
+                    Teleport(CFrame.new(QuestMarkers[Quest.QuestName.Text].Position + Vector3.new(0, -50, 0)))
+                    for i,v in next, Live:GetChildren() do
+                        if string.find(Quest.QuestName.Text, v.Name) then
+                            v.HumanoidRootPart.CFrame = Player.Character:GetModelCFrame() * CFrame.new(0,0,-3)
+                            Equip()
+                            Hit(v)
+                            if v.Humanoid.Health ~= v.Humanoid.MaxHealth then
+                                Humanoid.Health = 0
+                            end
+                        end
+                    end
+                end
+            end)
+        end
+    end)
+end)
+
+Tab:CreateDropdown("Quests", Quests,false,function(c,f)
+    Quest1 = c
+end)
+
+Tab:CreateToggle("Auto Chests",false,function(t)
+Tof = t
+    RunService.Stepped:Connect(function()
+        pcall(function()
+            if Tof then
+                Player.Character:FindFirstChildWhichIsA("Humanoid"):ChangeState(11)
+            end
+        end)
+    end)
+    spawn(function()
+        while wait() and Tof do
+            pcall(function()
+                for i,v in next, Chests:GetChildren() do
+                    if v.Transparency == 0 then
+                        Teleport(CFrame.new(v.Position + Vector3.new(0,0, 0)))
+                        wait(1)
+                        firetouchinterest(Player.Character.HumanoidRootPart, v, 0)
+                        break
+                    end
+                end
+            end)
+        end
+    end)
+end)
+
+Tab:CreateToggle("Auto Skills",false,function(t)
+NIG = t
+    spawn(function()
+        while wait() and NIG do
+            pcall(function()
+                for i,v in next, {"X", "Z", "C", "V", "R", "E"} do wait(0.5)
+                    VirtualUser:SendKeyEvent(true,v,false,game,0)
+                end
+            end)
+        end
+    end)
+end)
+Tab:CreateToggle("Auto Drop",false,function(t)
+FRo = t
+    spawn(function()
+        while wait() and FRo do
+            pcall(function()
+                for i,v in next, Drops:GetChildren() do
+                    firetouchinterest(Player.Character.HumanoidRootPart, v.Handle, 0)
+                end
+            end)
+        end
+    end)
+end)
+Tab:CreateToggle("Remove Common Bags",false,function(t)
+TTT = t
+    spawn(function()
+        while wait() and TTT do
+            pcall(function()
+                removeCommonBags()
+            end)
+        end
+    end)
+end)
+Tab:CreateToggle("Remove UnCommon Bags",false,function(t)
+Sex = t
+    spawn(function()
+        while wait() and Sex do
+            pcall(function()
+                removeUnCommonBags()
+            end)
+        end
+    end)
+end)
+
+Tab:CreateDropdown("Races", Races,false,function(c,f)
+    Races1 = c
+end)
+
+Tab:CreateToggle("Reroll Race",false,function(t)
+Roll = t
+    spawn(function()
+        while wait() and Roll do
+            RollRace(Races1)    
+        end
+    end)
+end)
+
+Tab:CreateToggle("Player Loop WalkSpeed/JumpPower",false,function(t)
+    Toggle = t
+    Stepped:Connect(function()
+        pcall(function()
+            if Toggle then
+                Player.Character:FindFirstChildWhichIsA("Humanoid").WalkSpeed = WalkSpeed
+                Player.Character:FindFirstChildWhichIsA("Humanoid").JumpPower = JumpPower
+            end 
+        end)
+    end)
+end)
+
+Tab:CreateSlider("WalkSpeed ",16,500,16,function(v)
+    WalkSpeed = v
+end)
+Tab:CreateSlider("JumpPower ",16,500,16,function(v)
+    JumpPower = v
+end)
+
+Tab:CreateToggle("Infinite Jump",false,function(t)
+InfiniteJump = t
+    UserInputService.JumpRequest:connect(function()
+        if InfiniteJump then
+            Player.Character:FindFirstChildWhichIsA("Humanoid"):ChangeState("Jumping")
+        end
+    end)
+end)
+
+Tab:CreateButton("FPS Booster",function()
+    for i,v in pairs(game:GetDescendants()) do 
+        if v:IsA("Texture") then
+            v.Texture = ""
+        elseif v:IsA("BasePart") then
+            v.Material = Enum.Material.Wood
+        end 
+    end 
+end)
+
+Tab:CreateButton("ServerHop",function()
+    ServerHop()
+end)
+
+Tab:CreateButton("Rejoin",function()
+    Rejoin()
+end)
