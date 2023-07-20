@@ -1,3 +1,4 @@
+if not game.PlaceId == 10320676839 then return end
 local VirtualUser = Instance.new("VirtualInputManager")
 Player.Idled:connect(
     function()
