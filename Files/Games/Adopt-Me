@@ -1,4 +1,4 @@
-if not game.PlaceId == 920587237 then return end
+if game.PlaceId ~= 920587237 then return end
 local VirtualUser = game:GetService("VirtualUser")
 Player.Idled:connect(
     function()
