@@ -1,0 +1,491 @@
+local Shindo = {
+    4616652839,
+    4601350214,
+    4601350394,
+    4601350656,
+    4601350809,
+    5431071837,
+    5447073001,
+    5084678830,
+    5431069982,
+    4601350760,
+    6341670805,
+    6505734854,
+    6901575446,
+    6984568732,
+    6986372023,
+    5451398863,
+    7214033433,
+    5451401540,
+    5307141034,
+    7534339269,
+    5451410109,
+    6593187011,
+    6593188260,
+    5743370338,
+    5664805984,
+    5664803952,
+    8184506020,
+    8472733618,
+    7923764447,
+    9310522814,
+    5451405681,
+    7524809704,
+    7524811367,
+    6602058266,
+    5255237254,
+    6602103757,
+    5824792748,
+    4616652839,
+    4601350214,
+    4601350394,
+    4601350656,
+    4601350809,
+    5431071837,
+    5447073001,
+    5431069982,
+    4601350760,
+    6341670805,
+    6505734854,
+    6901575446,
+    6984568732,
+    6986372023,
+    5451398863,
+    7214033433,
+    5451401540,
+    5307141034,
+    7534339269,
+    5451410109,
+    6593187011,
+    6593188260,
+    5743370338,
+    5664805984,
+    5664803952,
+    8184506020,
+    8472733618,
+    7923764447,
+    9310522814,
+    5451405681,
+    7524809704,
+    7524811367,
+    6602058266,
+    5255237254,
+    6602103757,
+    5824792748
+}
+
+if not table.find(Shindo, game.PlaceId) then
+    return
+end
+local npc = Workspace.npc 
+repeat wait() until Player:FindFirstChild("statz",true)
+local Stat = Player.statz
+local Keys = {}
+local Delete = {
+    "CCoff",
+    "custo",
+    "conquer",
+    "narutoshadowclone"
+}
+local Pcall = pcall(function()
+    for i,v in pairs(Delete) do
+        Workspace:FindFirstChild(v,true):Destroy()
+    end 
+end)
+local For = function(E)
+    return Stat.main[tostring(E)]
+end 
+
+local Key = function(Key)
+    return VirtualInputManager:SendKeyEvent(true,tostring(Key),true) and VirtualInputManager:SendKeyEvent(false,tostring(Key),false)
+end 
+
+local NoClip = function()
+    for i,v in next, Player.Character:GetChildren() do
+		if v:IsA("BasePart") then
+			v.CanCollide = false
+			v.Velocity = Vector3.new(0, 0, 0)
+		end
+	end
+end 
+
+for i,v in pairs(Stat.presetkeys:GetChildren()) do
+    if not table.find(Keys,v.Name) then
+        table.insert(Keys,v.Name)
+    end 
+end 
+
+local Old = pcall(function()
+    local Dungons = {}
+    for i=1,15 do 
+        table.insert(Dungons,"dungeon" .. i)
+    end 
+end)
+
+local ETable = {"element1", "element2", "element3", "element4"}
+local FTable = {"kg1", "kg2", "kg3", "kg4"}
+local Keys = {"T", "Y", "F", "G", "H", "Z", "C", "Q", "E", "V", "B", "N"}
+
+local Teleport = function (A)
+	Player.Character:FindFirstChild("HumanoidRootPart", true).CFrame = A 
+end
+
+RunService.Stepped:Connect(function()
+	sethiddenproperty(Player, "SimulationRadius", 1000)	
+end)
+
+local Quests = {}
+for i,v in next, Workspace:GetDescendants() do
+    if v:IsA("Model") and v.Name == "missiongiver" and v:FindFirstChild("loggys") then
+        table.insert(Quests, v.timer.time.boss.Text)
+        warn(v.timer.time.boss.Text)
+    end
+end
+
+
+local Lib = loadstring(game:HttpGet("https://raw.githubusercontent.com/1201for/V.G_Moblie/main/Files/Gui",true))()
+local Win = Lib:CreateWindow("V.G Hub",2,nil, nil)
+local Tab = Win:CreateTab("V.G Hub",function() warn(i) end)
+local Tab2 = Win:CreateTab("Main",function() warn(i) end)
+
+Tab:CreateToggle("Auto Logs",false,function(t)
+Logs = t
+	spawn(function()
+		while Logs and wait() do
+			pcall(function()
+				Teleport(Workspace.npc.logtraining.HumanoidRootPart.CFrame * CFrame.new(0, -5, 0))
+				Player.Character.combat.update:FireServer("mouse1", true)
+				Player.Character.combat.update:FireServer("mouse1", false)
+			end)
+		end
+	end)
+end)
+
+if game.PlaceId == 7524809704 then
+    Tab:CreateToggle("Auto Start Dungeon",false,function(t)
+    	Dungeon1 = t
+        spawn(function()
+            while wait() and Dungeon1 do
+                Player.pressplay:FireServer(Dungon)
+            end
+        end)
+    end)
+    Tab:CreateDropdown("Dungons", Dungons,false,function(c,f)
+        Dungon = c
+    end)
+end
+
+Tab:CreateToggle("Auto Mobs",false,function(t)
+AutoMobs = t
+	RunService.Stepped:Connect(function()
+		if AutoMobs then
+			NoClip()
+		end		
+	end)
+	spawn(function()
+		while AutoMobs and wait(0.1) do
+			pcall(function()
+                local Nig = Player.PlayerGui:FindFirstChild("Main"):FindFirstChild("ingame"):FindFirstChild("Missionstory")
+				if not Nig.Visible then
+					for i, v in pairs(Workspace.missiongivers:GetChildren()) do
+						if v:FindFirstChild("Head") and v.Head:FindFirstChild("givemission") and v.Head.givemission.Enabled and v.Head.givemission:FindFirstChild("color").Image == "http://www.roblox.com/asset/?id=5459241648" then
+							Teleport(CFrame.new(v.HumanoidRootPart.Position) * CFrame.new(0, -7, 3))
+							v:FindFirstChild("CLIENTTALK"):FireServer()
+							v:FindFirstChild("CLIENTTALK"):FireServer("accept")
+							break
+						end
+					end
+				end
+				if Nig.Visible then
+					for i, v in pairs(npc:GetChildren()) do
+						if v:IsA("Model") and v:FindFirstChild("npctype") and string.find(Nig.bg.name.Text,v.Head.mob.fram.name.info.Text) and v:FindFirstChild("HumanoidRootPart") and v:FindFirstChild("Humanoid") and v.Head.CFrame.Y > -1000 then
+							Teleport(CFrame.new(v.HumanoidRootPart.Position + Vector3.new(0,0,3)))
+							Player.Character.combat.update:FireServer("mouse1", true)  
+                            Player.Character.combat.update:FireServer("mouse1", false)
+                            local Anti = v:FindFirstChild("antiexploit", true)
+                            if Anti then 
+                                Anti:Destroy()
+                            end
+                            local Humanoid = v:FindFirstChildWhichIsA("Humanoid")
+                            if Humanoid.Health then
+                                Humanoid.Health = -9e9
+                            end 
+                            local fakehealth = v:FindFirstChild("fakehealth", true)
+                            if fakehealth then
+                                fakehealth.Value = -9e9 
+                            end
+                            wait(0.5)
+						end
+					end
+				end
+			end)
+		end
+	end)
+end)
+Tab:CreateToggle("Auto Boss Quests",false,function(t)
+Boss = t
+    spawn(function()
+        while wait() and Boss do
+            pcall(function()
+                local Nig = Player.PlayerGui:FindFirstChild("Main"):FindFirstChild("ingame"):FindFirstChild("Missionstory")
+                if not Nig.Visible then
+                    for i,v in next, Workspace.bossdropmission.missions:GetChildren() do
+                        for i,v in next, v:GetChildren() do
+                            if v:IsA("Model") and v:FindFirstChild("loggys") and not Nig.Visible then
+                                Teleport(CFrame.new(v.HumanoidRootPart.Position + Vector3.new(0,-7,0)))
+                                v:FindFirstChild("CLIENTTALK"):FireServer()
+							    v:FindFirstChild("CLIENTTALK"):FireServer("accept")
+                            end
+                        end
+                    end
+                end
+                if Nig.Visible then
+                    for i,v in next, Workspace.npc:GetChildren() do
+                        if v:IsA("Model") and v:FindFirstChild("npctype") and not v.Head.mob.fram.name.info.Text:find("Spirit") and not v:FindFirstChild("rpaw") and string.find(Nig.bg.name.Text, v.Head.mob.fram.name.info.Text) and v.Head.CFrame.Y > -1000 then
+                            Teleport(CFrame.new(v.HumanoidRootPart.Position + Vector3.new(0,0,-3)))
+                            Player.Character.combat.update:FireServer("mouse1", true)  
+                            Player.Character.combat.update:FireServer("mouse1", false)
+                            local Anti = v:FindFirstChild("antiexploit", true)
+                            if Anti then 
+                                Anti:Destroy()
+                            end
+                            local Humanoid = v:FindFirstChildWhichIsA("Humanoid")
+                            if Humanoid.Health then
+                                Humanoid.Health = -9e9
+                            end 
+                            local fakehealth = v:FindFirstChild("fakehealth", true)
+                            if fakehealth then
+                                fakehealth.Value = -9e9 
+                            end
+                            wait(0.5)
+                        end
+                    end
+                end 
+            end)
+        end
+    end)
+end)
+Tab:CreateToggle("Semi Kill Aura",false,function(t)
+Kill = t
+	spawn(function()
+		while Kill do wait()
+			pcall(function()
+				for i,v in pairs(npc:GetChildren()) do
+					if v:IsA("Model") and v:FindFirstChildWhichIsA("Humanoid") then
+						local Anti = v:FindFirstChild("antiexploit", true)
+						if Anti then 
+							Anti:Destroy()
+						end
+						local Humanoid = v:FindFirstChildWhichIsA("Humanoid")
+						if Humanoid.Health then
+							Humanoid.Health = 0 
+						end 
+						local fakehealth = v:FindFirstChild("fakehealth", true)
+						if fakehealth then
+							fakehealth.Value = 0 
+						end
+					end 
+				end 
+			end)
+		end 
+	end)
+end)
+Tab:CreateToggle("Auto Dungeon",false,function(t)
+Hope = A
+	RunService.Stepped:Connect(function()
+		if Hope then
+			NoClip()
+		end	
+	end)
+	spawn(function()
+		while Hope and wait() do
+			pcall(function()
+				for i, v in pairs(npc:GetChildren()) do
+					if v:IsA("Model") and v:FindFirstChild("npctype") and v:FindFirstChild("HumanoidRootPart") and v:FindFirstChild("Humanoid") and v.Head.CFrame.Y > -1000 then
+						Teleport(CFrame.new(v.HumanoidRootPart.Position) * CFrame.new(0, -7, 3))
+						Player.Character.combat.update:FireServer("mouse1", true)
+					end
+				end
+			end)
+		end
+	end)
+end)
+Tab:CreateToggle("Maru Farm",false,function(t)
+Bosses2 = t
+	RunService.Stepped:Connect(function()
+		if Bosses3 then
+			NoClip()
+		end
+    end)
+    spawn(function()
+        while Bosses2 and wait() do
+            pcall(function()
+                local Nig = Player.PlayerGui:WaitForChild("Main"):WaitForChild("ingame"):WaitForChild("Missionstory")
+                if not Nig.Visible then
+                    for i, v in pairs(Workspace.MARUmission.missions:GetChildren()) do
+                        if v:IsA("Model") then
+                            Teleport(CFrame.new(v.HumanoidRootPart.Position) * CFrame.new(0, -5, 3))
+                            wait(1)
+                            v:FindFirstChild("CLIENTTALK"):FireServer()
+                            v:FindFirstChild("CLIENTTALK"):FireServer("accept")
+                        end
+                    end
+                elseif Nig.Visible then
+                    for i, v in pairs(Workspace.npc:GetChildren()) do
+                        if v:IsA("Model") and v:FindFirstChild("npctype") and v.Head.CFrame.Y > -1000 then
+                            Teleport(CFrame.new(v.HumanoidRootPart.Position) * CFrame.new(0, -7, 3))
+                            wait(0.5)
+                            Player.Character.combat.update:FireServer("mouse1", true)
+                        end
+                    end
+                end
+            end)
+        end
+    end)
+end)
+Tab:CreateToggle("Happy Farm",false,function(t)
+    boo = t
+    RunService.Stepped:Connect(function()
+        if boo then
+            NoClip()
+        end
+    end)
+    spawn(function()
+        while wait() and boo do
+           pcall(function()
+                local Nig = Player.PlayerGui:WaitForChild("Main"):WaitForChild("ingame"):WaitForChild("Missionstory")
+                if not Nig.Visible then
+                    for i,v in next, workspace.HAPPYmission.missions.Hollow4:GetChildren() do
+                        if v:IsA("Model") and v:FindFirstChild("loggys") and v:FindFirstChild("timer") then
+                            Teleport(CFrame.new(v:FindFirstChild("HumanoidRootPart").Position + Vector3.new(0,-7,0)))
+                            v:FindFirstChild("CLIENTTALK"):FireServer()
+                            v:FindFirstChild("CLIENTTALK"):FireServer("accept")
+                            wait(.5)
+                        end
+                    end
+                end
+                if Nig.Visible then
+                    for i,v in next, Workspace.npc:GetChildren() do
+                        if v:IsA("Model") and v:FindFirstChild("npctype") and v:FindFirstChild("bossdrop") and (string.find(v.Head.mob.fram.name.info.Text, "Happy")) and v:FindFirstChild("HumanoidRootPart") and v:FindFirstChild("Humanoid") and v.Head.CFrame.Y > -1000 then
+                            Teleport(CFrame.new(v.HumanoidRootPart.Position + Vector3.new(0, -7, 3)))
+                            Player.Character.combat.update:FireServer("mouse1", true)  
+                            Player.Character.combat.update:FireServer("mouse1", false)
+                            local Anti = v:FindFirstChild("antiexploit", true)
+                            if Anti then 
+                                Anti:Destroy()
+                            end
+                            local Humanoid = v:FindFirstChildWhichIsA("Humanoid")
+                            if Humanoid.Health then
+                                Humanoid.Health = -9e9
+                            end 
+                            local fakehealth = v:FindFirstChild("fakehealth", true)
+                            if fakehealth then
+                                fakehealth.Value = -9e9 
+                            end
+                            wait(0.5)
+                        end
+                    end
+                end
+            end)
+        end
+    end)
+end)
+Tab:CreateToggle("Tail Beast Maru Farm",false,function(t)
+	Bosses3 = t
+	RunService.Stepped:Connect(function()
+		if Bosses3 then
+			NoClip()
+		end
+    end)
+    spawn(function()
+        while Bosses2 and wait() do
+            pcall(function()
+                local Nig = Player.PlayerGui:WaitForChild("Main"):WaitForChild("ingame"):WaitForChild("Missionstory")
+                if not Nig.Visible then
+                    for i, v in pairs(Workspace.MARUmission.missions:GetChildren()) do
+                        if v:IsA("Model") then
+                            Teleport(CFrame.new(v.HumanoidRootPart.Position) * CFrame.new(0, -5, 3))
+                            wait(1)
+                            v:FindFirstChild("CLIENTTALK"):FireServer()
+                            v:FindFirstChild("CLIENTTALK"):FireServer("accept")
+                        end
+                    end
+                elseif Nig.Visible then
+                    for i, v in pairs(Workspace.npc:GetChildren()) do
+                        if v:IsA("Model") and v:FindFirstChild("npctype") and v.Head.CFrame.Y > -1000 then
+                            Teleport(CFrame.new(v.HumanoidRootPart.Position) * CFrame.new(0, -7, 3))
+                            wait(0.5)
+                            Player.Character.combat.update:FireServer("mouse1", true)
+                        end
+                    end
+                end
+            end)
+        end
+    end)
+end)
+Tab:CreateToggle("Auto Skills",false,function(t)
+    D = t
+    spawn(function()
+        while wait() and D do
+            for i,v in next, Keys do wait()
+                game:GetService("VirtualInputManager"):SendKeyEvent(true, v, false, game)
+            end
+        end
+    end)
+end)
+Tab:CreateToggle("Auto Rebirth",false,function(t)
+    Rebirth = t
+    spawn(function()
+        while wait() and Rebirth do
+            if Player.statz.lvl:FindFirstChild("lvl").Value == 1000 and wait(1) then
+                Player.startevent:FireServer("rankup")
+            end
+        end
+    end)
+end)
+
+Tab:CreateToggle("Player Loop WalkSpeed/JumpPower",false,function(t)
+    Toggle = t
+    Stepped:Connect(function()
+        pcall(function()
+            if Toggle then
+                Player.Character:FindFirstChildWhichIsA("Humanoid").WalkSpeed = WalkSpeed
+                Player.Character:FindFirstChildWhichIsA("Humanoid").JumpPower = JumpPower
+            end 
+        end)
+    end)
+end)
+
+Tab:CreateSlider("WalkSpeed ",16,500,16,function(v)
+    WalkSpeed = v
+end)
+Tab:CreateSlider("JumpPower ",16,500,16,function(v)
+    JumpPower = v
+end)
+
+Tab:CreateToggle("Infinite Jump",false,function(t)
+InfiniteJump = t
+    UserInputService.JumpRequest:connect(function()
+        if InfiniteJump then
+            Player.Character:FindFirstChildWhichIsA("Humanoid"):ChangeState("Jumping")
+        end
+    end)
+end)
+
+Tab:CreateButton("FPS Booster",function()
+    for i,v in pairs(game:GetDescendants()) do 
+        if v:IsA("Texture") then
+            v.Texture = ""
+        elseif v:IsA("BasePart") then
+            v.Material = Enum.Material.Wood
+        end 
+    end 
+end)
+
+Tab:CreateButton("ServerHop",function()
+    ServerHop()
+end)
+
+Tab:CreateButton("Rejoin",function()
+    Rejoin()
+end)
