@@ -175,6 +175,79 @@ if game.PlaceId == 7524809704 then
     end)
 end
 
+if game.PlaceId == 4616652839 then
+local Bloods = {}
+for i,v in pairs(game:GetService("ReplicatedStorage").alljutsu:GetChildren()) do
+    if v:IsA("Folder") and v:FindFirstChild("KG") then
+        table.insert(Bloods,v.Name)
+    end
+end 
+local ELEMENT = {}
+for i,v in pairs(game:GetService("ReplicatedStorage").alljutsu:GetChildren()) do
+    if v:IsA("Folder") and v:FindFirstChild("ELEMENT") then
+        table.insert(ELEMENT,v.Name)
+    end
+end 
+local Er = {}
+for i,v in pairs(Player.statz.main:GetChildren()) do
+    if v.Name:find("element") then
+        table.insert(Er,v.Name)
+    end
+end
+local Er1 = {}
+for i,v in pairs(Player.statz.main:GetChildren()) do
+    if v.Name:find("kg") then
+        table.insert(Er1,v.Name)
+    end
+end
+
+Tab:CreateToggle("Spin Element",false,function(t)
+	Elment = t
+    spawn(function()
+        while wait() and Elment do
+            pcall(function()
+                if not string.find(Player.statz.main[elementslot].Value, wantedElement) and not Player.statz.main[elementslot]:FindFirstChild("dontspin") then
+                    Player.startevent:FireServer("spin", elementslot)
+                elseif not string.find(Player.statz.main[elementslot].Value, wantedElement) and Player.statz.spins.Value == 0 then
+                    warn("No Spins Left")
+                end
+            end)
+        end
+    end)
+end)
+Tab:CreateDropdown("Element Slots", Er, false, function(A)
+	elementslot = A
+end)
+
+Tab:CreateDropdown("Elements", ELEMENT, false, function(A)
+    wantedElement = A
+end)
+
+Tab:CreateToggle("Spin BloodLine",false,function(t)
+	Bloodd = t
+    spawn(function()
+        while wait() and Bloodd do
+            pcall(function()
+                if not string.find(Player.statz.main[bloodslots].Value, wantedBlood) and not Player.statz.main[bloodslots]:FindFirstChild("dontspin") then
+                    Player.startevent:FireServer("spin", bloodslots)
+                elseif not string.find(Player.statz.main[bloodslots].Value, wantedBlood) or Player.statz.spins.Value == 0 then
+                    warn("No Spins Left")
+                end
+            end)
+        end
+    end)
+end)
+
+Tab:CreateDropdown("BloodLines Slot", ELEMENT, false, function(A)
+    bloodslots = A
+end)
+
+Tab:CreateDropdown("BloodLines", ELEMENT, false, function(A)
+    wantedBlood = A
+end)
+
+end
+
 Tab:CreateToggle("Auto Mobs",false,function(t)
 AutoMobs = t
 	RunService.Stepped:Connect(function()
@@ -235,6 +308,7 @@ Boss = t
                                 Teleport(CFrame.new(v.HumanoidRootPart.Position + Vector3.new(0,-7,0)))
                                 v:FindFirstChild("CLIENTTALK"):FireServer()
 							    v:FindFirstChild("CLIENTTALK"):FireServer("accept")
+                                wait(0.5)
                             end
                         end
                     end
