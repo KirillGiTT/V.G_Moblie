@@ -184,7 +184,7 @@ H = t
                         Teleport(CFrame.new(v:GetModelCFrame().Position + Vector3.new(0,-7,0)))
                         Equip()
                         Hit(v)
-                        if v.Humanoid.Health ~= v.Humanoid.MaxHealth then
+                        if v.Humanoid.Health < v.Humanoid.MaxHealth then
                             v.Humanoid.Health = 0
                         end
                     end
@@ -222,7 +222,7 @@ Go = t
                             v.HumanoidRootPart.CFrame = Player.Character:GetModelCFrame() * CFrame.new(0,0,-3)
                             Equip()
                             Hit(v)
-                            if v.Humanoid.Health ~= v.Humanoid.MaxHealth then
+                            if v.Humanoid.Health < v.Humanoid.MaxHealth then
                                 Humanoid.Health = 0
                             end
                         end
