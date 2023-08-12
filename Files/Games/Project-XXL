@@ -203,7 +203,7 @@ local NoCliper = function()
 end
 
 local Teleport = function(A)
-    Player.Character:FindFirstChild("HumanoidRootPart").CFrame = t 
+    Player.Character:FindFirstChild("HumanoidRootPart").CFrame = A
 end
 local Hit = function(A)
     ReplicatedStorage:WaitForChild("RemoteEvents"):WaitForChild("BladeCombatRemote"):FireServer(false, Vector3.new(A:FindFirstChildWhichIsA("BasePart").Position), CFrame.new(A:FindFirstChildWhichIsA("BasePart").Position))
@@ -227,7 +227,7 @@ H = t
     RunService.Stepped:Connect(function()
         pcall(function()
             if H then
-                Player.Character:FindFirstChildWhichIsA("Humanoid"):ChangeState(11)
+                NoCliper()
             end
         end)
     end)
@@ -368,7 +368,7 @@ Tab:CreateDropdown("Quests", Quests,false,function(c,f)
 end)
 
 Tab:CreateToggle("Auto Chests",false,function(t)
-Tof = t
+    Tof = t
     RunService.Stepped:Connect(function()
         pcall(function()
             if Tof then
@@ -378,7 +378,7 @@ Tof = t
     end)
     spawn(function()
         while wait() and Tof do
-            pcall(function()
+        
                 for i,v in next, Chests:GetChildren() do
                     if v.Transparency == 0 then
                         Teleport(CFrame.new(v.Position + Vector3.new(0, 2, 0)))
@@ -387,7 +387,7 @@ Tof = t
                         break
                     end
                 end
-            end)
+           
         end
     end)
 end)
