@@ -526,7 +526,7 @@ Tab:CreateToggle("Remove Hearts",false,function(t)
     spawn(function()
         while wait() and fghv do
             pcall(function()
-                removeHeart()
+                RemoveHeart()
             end)
         end
     end)
