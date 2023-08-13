@@ -232,14 +232,14 @@ H = t
         end)
     end)
     spawn(function()
-        while wait(.1) and H do 
+        while wait(.2) and H do 
             pcall(function()
                 for i,v in next, Live:GetChildren() do
                     if v:IsA("Model") and v.Name == ddd and v.Humanoid.Health ~= 0 then
                         Teleport(CFrame.new(v:GetModelCFrame().Position + Vector3.new(0,-7,0)))
                         Equip()
                         Hit(v)
-                        if v.Humanoid.Health ~= v.Humanoid.MaxHealth then
+                        if v.Humanoid.Health < v.Humanoid.MaxHealth and v.Humanoid:FindFirstChild("creator",true) then
                             v.Humanoid.Health = 0
                         end
                     end
@@ -252,7 +252,38 @@ end)
 Tab:CreateDropdown("Mobs", Mobs,false,function(c,f)
     ddd = c
 end)
-
+Tab:CreateToggle("Player PassiveMode/God",false,function(t)
+    Toggt = t
+    spawn(function()
+        while wait() and Toggt do
+            pcall(function()
+                for i,v in next, Live:GetChildren() do
+                    if v:IsA("Model") and v:FindFirstChild("Humanoid").Health ~= 0 then
+                        if v.Humanoid.Health < v.Humanoid.MaxHealth and v.Humanoid:FindFirstChild("creator", true) then
+                            v.Humanoid.Health = 0
+                        end
+                    end
+                end
+            end)
+        end
+    end)
+end)
+Tab:CreateToggle("Player PassiveMode/God",false,function(t)
+    Fog = t
+    spawn(function()
+        while wait() and Fog do
+            pcall(function()
+                if not Player.PlayerValues.PassiveMode.Value then
+                    Teleport(CFrame.new(Workspace.SafeZoneIndicator.Position + Vector3.new(0,2,0)))
+                    firetouchinterest(Player.Character.HumanoidRootPart, Workspace.GameStuff.UiGokuTeleportModel.TeleportPart, 0)
+                end
+                if not Fog then
+                    Player.Character.Humanoid.Health = 0
+                end
+            end)
+        end
+    end)
+end)
 Tab:CreateToggle("Auto Boss",false,function(t)
     ASSF = t
     RunService.Stepped:Connect(function()
@@ -263,18 +294,17 @@ Tab:CreateToggle("Auto Boss",false,function(t)
         end)
     end)
     spawn(function()
-        while wait() and ASSF do 
+        while wait(.1) and ASSF do 
             pcall(function()
                 for i,v in next, Live:GetChildren() do
                     if v:IsA("Model") and v.Humanoid.Health ~= 0 and v:FindFirstChild("RaidBoss", true) then
                         Teleport(CFrame.new(v:GetModelCFrame().Position + Vector3.new(0,-7,0)))
                         Equip()
                         Hit(v)
-                        if v.Humanoid.Health < v.Humanoid.MaxHealth and Mag(Player.Character:GetModelCFrame(), v:GetModelCFrame()) < 50 then
+                        if v.Humanoid.Health < v.Humanoid.MaxHealth and v.Humanoid:FindFirstChild("creator", true) then
                             v.Humanoid.Health = 0
                         end
-                        wait(.5)
-                        if v.Humanoid.Health == 0 then
+                        if v.Humanoid.Health == 0 and wait(.2) then
                             Teleport(CFrame.new(1000, 50000, 1000))
                         end
                     end
@@ -352,7 +382,7 @@ Tab:CreateToggle("Auto Quest",false,function(t)
                             Teleport(CFrame.new(v.HumanoidRootPart.Position + Vector3.new(0,-7,0)))
                             Equip()
                             Hit(v)
-                            if v.Humanoid.Health < v.Humanoid.MaxHealth and Mag(Player.Character:GetModelCFrame(), v:GetModelCFrame()) < 50 then
+                            if v.Humanoid.Health < v.Humanoid.MaxHealth and v.Humanoid:FindFirstChild("creator", true) then
                                 v.Humanoid.Health = 0
                             end
                         end
@@ -378,7 +408,7 @@ Tab:CreateToggle("Auto Chests",false,function(t)
     end)
     spawn(function()
         while wait() and Tof do
-        
+            pcall(function()
                 for i,v in next, Chests:GetChildren() do
                     if v.Transparency == 0 then
                         Teleport(CFrame.new(v.Position + Vector3.new(0, 2, 0)))
@@ -387,7 +417,7 @@ Tab:CreateToggle("Auto Chests",false,function(t)
                         break
                     end
                 end
-           
+            end)
         end
     end)
 end)
@@ -404,6 +434,8 @@ NIG = t
         end
     end)
 end)
+
+
 Tab:CreateToggle("Auto Drop",false,function(t)
 FRo = t
     spawn(function()
