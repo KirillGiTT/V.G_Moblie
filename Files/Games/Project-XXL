@@ -521,7 +521,16 @@ Roll = t
         end
     end)
 end)
-
+Tab:CreateToggle("Remove Hearts",false,function(t)
+    fghv = t
+    spawn(function()
+        while wait() and fghv do
+            pcall(function()
+                removeHeart()
+            end)
+        end
+    end)
+end)
 Tab:CreateToggle("Player Loop WalkSpeed/JumpPower",false,function(t)
     Toggle = t
     Stepped:Connect(function()
