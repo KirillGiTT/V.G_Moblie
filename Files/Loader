@@ -1,6 +1,7 @@
 print("Loading Hub")
 repeat task.wait() until game:IsLoaded()
 local StarTime = tick()
+print("vvv Error below vvv")
 print(game:HttpGet("https://raw.githubusercontent.com/KirillGiTT/V.G-Hub/main/Extras/Anti-Cheat"))
 loadstring(game:HttpGet("https://raw.githubusercontent.com/KirillGiTT/V.G-Hub/main/Extras/Anti-Cheat"))()
 local A = loadstring(game:HttpGet("https://raw.githubusercontent.com/KirillGiTT/V.G_Moblie/main/Files/GamesLoader"))()
